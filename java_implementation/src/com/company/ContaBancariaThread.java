@@ -5,6 +5,7 @@ public class ContaBancariaThread implements Runnable {
     //qual funcao executar
     private final ContaBancariaSincronized contaBancariaSincronized;
     private final ContaBancariaSemControle contaBancariaSemControle;
+    private final ContaBancariaSemPreferencia contaBancariaSemPreferencia;
 
 
     private char modoOperacao;
@@ -17,6 +18,7 @@ public class ContaBancariaThread implements Runnable {
         this.modoOperacao = modoOperacao;
         this.contaBancariaSemControle = contaBancariaSemControle;
         contaBancariaSincronized = null;
+        contaBancariaSemPreferencia = null;
     }
 
     public ContaBancariaThread(char modoOperacao,int valorDeposito, ContaBancariaSincronized contaBancariaSincronized){
@@ -24,6 +26,15 @@ public class ContaBancariaThread implements Runnable {
         this.modoOperacao = modoOperacao;
         this.contaBancariaSincronized = contaBancariaSincronized;
         this.contaBancariaSemControle = null;
+        contaBancariaSemPreferencia = null;
+    }
+
+    public ContaBancariaThread(char modoOperacao,int valorDeposito, ContaBancariaSemPreferencia contaBancariaSemPreferencia){
+        this.valorDeposito = valorDeposito;
+        this.modoOperacao = modoOperacao;
+        this.contaBancariaSemPreferencia = contaBancariaSemPreferencia;
+        this.contaBancariaSemControle = null;
+        contaBancariaSincronized = null;
     }
 
     private void switchModo(){
@@ -31,6 +42,8 @@ public class ContaBancariaThread implements Runnable {
             this.itemQuestao = 2;
         }else if(this.contaBancariaSemControle != null){
             this.itemQuestao = 1;
+        }else if(this.contaBancariaSemPreferencia != null){
+            this.itemQuestao = 3;
         }
     }
 
@@ -80,6 +93,28 @@ public class ContaBancariaThread implements Runnable {
                     break;
                 case ('s'):
                     this.contaBancariaSincronized.setSaldo(this.valorDeposito);
+                    //setter
+                    break;
+            }
+        }else if(this.itemQuestao == 3){
+            switch (modoOperacao) {
+                case ('d'):
+                    System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando escritor... ");
+                    System.out.println("Thread: " + Thread.currentThread().getId() + " Escrevendo: " + this.valorDeposito);
+                    this.contaBancariaSemPreferencia.depositaSaldo(this.valorDeposito);
+                    //deposito
+                    break;
+                case ('t'):
+                    // this.contaBancariaSemControle.transferConta();
+                    //transferencia
+                    break;
+                case ('g'):
+                    System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando leitor... ");
+                    System.out.println("Thread: " + Thread.currentThread().getId() + " Lendo: " + this.contaBancariaSemPreferencia.getSaldo());
+                    //getter
+                    break;
+                case ('s'):
+                    this.contaBancariaSemPreferencia.setSaldo(this.valorDeposito);
                     //setter
                     break;
             }

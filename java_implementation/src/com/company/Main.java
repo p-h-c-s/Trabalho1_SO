@@ -10,10 +10,10 @@ public class Main {
 
     /*
 
-    4
-4
+Entradas de exemplo.
+2
+10
 10 10 10 10
-
 
 2
 2
@@ -46,12 +46,13 @@ public class Main {
         }
     }
 
-    public static void item2(int[] vetEntradas, ContaBancariaSincronized ContaBancariaSincronized, int numLeitores){
+    public static void item2(int[] vetEntradas, ContaBancariaSemPreferencia contaBancariaSemPreferencia, int numLeitores){
         /**
          * Criar *numEscritores* threads de escrita. Cada uma ira depositar um valor que está guardado em vetEntradas.
          */
+        //contaBancariaSincronized.setCanRun(vetEntradas.length);
         for (int i:vetEntradas) {
-            ContaBancariaThread contaBancariaThread = new ContaBancariaThread('d',i,ContaBancariaSincronized);
+            ContaBancariaThread contaBancariaThread = new ContaBancariaThread('d',i,contaBancariaSemPreferencia);
             //passar objeto runnable pra classe.
             Thread thread = new Thread(contaBancariaThread);
             thread.setPriority(Thread.MAX_PRIORITY);
@@ -62,7 +63,7 @@ public class Main {
          * Criar *numLeitores* threads de leitura. Cada uma ira ler o valor da contaBancariaSemControle.
          */
         for (int i = 0;i < numLeitores; i++) {
-            ContaBancariaThread contaBancariaThread = new ContaBancariaThread('g',i,ContaBancariaSincronized);
+            ContaBancariaThread contaBancariaThread = new ContaBancariaThread('g',i,contaBancariaSemPreferencia);
             Thread thread = new Thread(contaBancariaThread);
             thread.setPriority(Thread.MAX_PRIORITY);
             thread.start();
@@ -71,13 +72,9 @@ public class Main {
 
     public static void item3(int[] vetEntradas, ContaBancariaSincronized contaBancariaSincronized, int numLeitores){
 
-        //Thread[] threads = new Thread[numLeitores+vetEntradas.length];
 
         ArrayList<Thread> threads = new ArrayList<>();
 
-        //ContaBancariaThread[] contasEscrita = new ContaBancariaThread[vetEntradas.length];
-
-        //ContaBancariaThread[] contasLeitura = new ContaBancariaThread[numLeitores];
 
         /**
          * Criar *numEscritores* threads de escrita. Cada uma ira depositar um valor que está guardado em vetEntradas.
@@ -105,7 +102,7 @@ public class Main {
 
 
 
-        for (int i = 0; i < threads.size(); i++) {
+        for (int i = 0; i < 4; i++) {
 
             for (Thread t:threads) {
                 if(t.getState() == Thread.State.BLOCKED){
@@ -143,7 +140,8 @@ public class Main {
 
         ContaBancariaSemControle contaBancariaSemControle = new ContaBancariaSemControle();
 
-        ContaBancariaSincronized contaBancariaSincronized2 = new ContaBancariaSincronized();
+
+        ContaBancariaSemPreferencia contaBancariaSemPreferencia = new ContaBancariaSemPreferencia();
         ContaBancariaSincronized contaBancariaSincronized3 = new ContaBancariaSincronized();
 
         System.out.println("Insira o numero de escritores");
@@ -176,7 +174,7 @@ public class Main {
 
         System.out.println("\nItem 2:");
 
-        item2(vetEntradas,contaBancariaSincronized2,numLeitores);
+        item2(vetEntradas,contaBancariaSemPreferencia,numLeitores);
 
 
         try {
@@ -186,7 +184,7 @@ public class Main {
         }
 
 
-        System.out.println("Valor Final = " + contaBancariaSincronized2.getSaldoNoThread());
+        System.out.println("Valor Final = " + contaBancariaSemPreferencia.getSaldoNoThread());
 
         System.out.println("\nItem 3:");
 
