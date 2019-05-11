@@ -108,9 +108,9 @@ Entradas de exemplo.
                 if(t.getState() == Thread.State.BLOCKED){
                     System.out.println("Thread " + t.getId() + " estado: " + t.getState());
                 }
-                if(!(t.isAlive())){
+                /*if(!(t.isAlive())){
                     System.out.println("Thread " + t.getId() + " estado: finalizado" );
-                }
+                }*/
             }
 
             //gambi pra poder achar as threads bloqueadas
