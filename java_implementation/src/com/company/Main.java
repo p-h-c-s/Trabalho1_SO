@@ -8,6 +8,18 @@ import java.util.Scanner;
 public class Main {
 
 
+    /*
+
+    4
+4
+10 10 10 10
+
+
+2
+2
+10 10
+     */
+
     //https://stackoverflow.com/questions/14858075/set-the-develop-branch-as-the-default-for-a-pull-request
     //https://stackoverflow.com/questions/24215032/cant-update-no-tracked-branch
     //https://stackoverflow.com/questions/11073841/why-doesnt-this-synchronized-method-work-as-expected
@@ -105,7 +117,7 @@ public class Main {
 
             //gambi pra poder achar as threads bloqueadas
             try {
-                Thread.sleep(250);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -147,10 +159,10 @@ public class Main {
             vetEntradas[i] = inp.nextInt();
         }
 
-/*
-        System.out.println("Item 1:");
 
-        //item1(vetEntradas,contaBancariaSemControle,numLeitores);
+        System.out.println("\nItem 1:");
+
+        item1(vetEntradas,contaBancariaSemControle,numLeitores);
 
 
         try {
@@ -159,8 +171,9 @@ public class Main {
             e.printStackTrace();
         }
 
+        System.out.println("Valor Final = " + contaBancariaSemControle.getSaldo());
 
-        System.out.println("Item 2:");
+        System.out.println("\nItem 2:");
 
         item2(vetEntradas,contaBancariaSincronized2,numLeitores);
 
@@ -170,61 +183,17 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-*/
-        System.out.println("Item 3:");
+
+
+        System.out.println("Valor Final = " + contaBancariaSincronized2.getSaldo());
+
+        System.out.println("\nItem 3:");
 
         item3(vetEntradas,contaBancariaSincronized3,numLeitores);
 
         inp.close();
 
-
-
-
         System.out.println(contaBancariaSincronized3.getSaldo());
-
-        /*
-        ContaBancariaSincronized conta1 = new ContaBancariaSincronized();
-
-        ContaBancariaSemControle contaSemControle = new ContaBancariaSemControle();
-
-        ContaBancariaThread threadEscrita = new ContaBancariaThread('s', 100,contaSemControle);
-
-        ContaBancariaThread threadAdd = new ContaBancariaThread('d', 100,contaSemControle);
-
-        ContaBancariaThread threadLeitura = new ContaBancariaThread('g', 0,contaSemControle);
-
-        Thread threadSetter = new Thread(threadEscrita);
-        threadSetter.setName("setter");
-        threadSetter.start();
-
-        Thread threadAdder = new Thread(threadAdd);
-        threadAdder.setName("adder");
-        threadAdder.start();
-
-        Thread threadLer = new Thread(threadLeitura);
-        threadLer.setName("adder");
-        threadLer.start();
-
-        try {
-            threadSetter.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-            threadAdder.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-            threadLer.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(contaSemControle.getSaldo());
-*/
-        //IMPORTANTE: A main pode acabar antes da thread, entao nao e confiavel dar print
-
 
     }
 }
