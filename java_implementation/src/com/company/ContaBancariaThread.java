@@ -36,11 +36,11 @@ public class ContaBancariaThread implements Runnable {
 
     @Override
     public void run(){
-        System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando... ");
         switchModo();
         if(this.itemQuestao == 1) {
             switch (modoOperacao) {
                 case ('d'):
+                        System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando escritor... ");
                         System.out.println("Thread: " + Thread.currentThread().getId() + " Escrevendo: " + this.valorDeposito);
                         this.contaBancariaSemControle.depositaSaldo(this.valorDeposito);
                         //deposito
@@ -50,6 +50,7 @@ public class ContaBancariaThread implements Runnable {
                     //transferencia
                     break;
                 case ('g'):
+                    System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando leitor... ");
                     System.out.println("Thread: " + Thread.currentThread().getId() + " Lendo: " + this.contaBancariaSemControle.getSaldo());
 
                     //getter
@@ -63,6 +64,7 @@ public class ContaBancariaThread implements Runnable {
         }else if(this.itemQuestao==2){
             switch (modoOperacao) {
                 case ('d'):
+                        System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando escritor... ");
                         System.out.println("Thread: " + Thread.currentThread().getId() + " Escrevendo: " + this.valorDeposito);
                         this.contaBancariaSincronized.depositaSaldo(this.valorDeposito);
                     //deposito
@@ -72,6 +74,7 @@ public class ContaBancariaThread implements Runnable {
                     //transferencia
                     break;
                 case ('g'):
+                    System.out.println("Thread: " + Thread.currentThread().getId() + " Inicializando leitor... ");
                     System.out.println("Thread: " + Thread.currentThread().getId() + " Lendo: " + this.contaBancariaSincronized.getSaldo());
                     //getter
                     break;

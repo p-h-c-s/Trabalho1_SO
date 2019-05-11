@@ -82,6 +82,7 @@ public class Main {
         /**
          * Criar *numEscritores* threads de escrita. Cada uma ira depositar um valor que está guardado em vetEntradas.
          */
+        contaBancariaSincronized.setCanRun(vetEntradas.length);
         for (int i:vetEntradas) {
             ContaBancariaThread contaBancariaThread = new ContaBancariaThread('d',i,contaBancariaSincronized);
             //passar objeto runnable pra classe.
@@ -104,7 +105,7 @@ public class Main {
 
 
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < threads.size(); i++) {
 
             for (Thread t:threads) {
                 if(t.getState() == Thread.State.BLOCKED){
@@ -117,7 +118,7 @@ public class Main {
 
             //gambi pra poder achar as threads bloqueadas
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -185,7 +186,7 @@ public class Main {
         }
 
 
-        System.out.println("Valor Final = " + contaBancariaSincronized2.getSaldo());
+        System.out.println("Valor Final = " + contaBancariaSincronized2.getSaldoNoThread());
 
         System.out.println("\nItem 3:");
 
@@ -193,7 +194,7 @@ public class Main {
 
         inp.close();
 
-        System.out.println(contaBancariaSincronized3.getSaldo());
+        System.out.println(contaBancariaSincronized3.getSaldoNoThread());
 
     }
 }
