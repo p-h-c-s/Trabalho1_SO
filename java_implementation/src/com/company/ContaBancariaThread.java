@@ -119,7 +119,6 @@ public class ContaBancariaThread implements Runnable {
                     break;
             }
         }
+        System.out.println("Thread: " + Thread.currentThread().getId() + " Finalizando...");
     }
-
-
 }
