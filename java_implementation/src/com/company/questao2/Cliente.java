@@ -39,14 +39,14 @@ public class Cliente implements Runnable {
         //coloca o cliente na fila
         enfileiraCliente();
         //se nao foi atendido,
-        if(!foiAtendido){
+        while(!foiAtendido){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        FilaDeEspera.decrNumTotalClientes();
+
         System.out.println("Thread Cliente: " + this.threadId + " Finalizando...");
     }
 

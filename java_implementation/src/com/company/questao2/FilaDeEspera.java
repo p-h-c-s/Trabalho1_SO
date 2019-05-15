@@ -24,7 +24,6 @@ public class FilaDeEspera {
     }
 
     public synchronized boolean enfileiraCliente(Cliente c,long threadId){
-        synchronized (fila) {
             if (this.fila.size() < this.maxSize) {
                 this.fila.add(c);
                 System.out.println("Thread Cliente: " + threadId + " enfileirando...");
@@ -34,34 +33,35 @@ public class FilaDeEspera {
             } else {
                 return false;
             }
-        }
     }
 
     public synchronized Cliente getNextCliente(long threadId){
-        try{
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return this.fila.remove();
-        }catch (NoSuchElementException e){
-            //System.out.println("total = "  + Barbeiro.getNumTotalClientes());
-            if(FilaDeEspera.getNumTotalClientes() == 0){
+        System.out.println(FilaDeEspera.getNumTotalClientes());
+            if (FilaDeEspera.getNumTotalClientes() == 0) {
                 //faz os barbeiros que estao dormindo finalizarem
                 notifyAll();
                 return null;
             }
-            System.out.println("Thread de Barbeiro: " + threadId + " Dormindo...");
             try {
-                wait();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            System.out.println("Thread de Barbeiro: " + threadId + " Acordando...");
-            return null;
-        }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                FilaDeEspera.decrNumTotalClientes();
+                return this.fila.remove();
+            } catch (NoSuchElementException e) {
+                //System.out.println("total = "  + Barbeiro.getNumTotalClientes());
 
+                System.out.println("Thread de Barbeiro: " + threadId + " Dormindo...");
+                try {
+                    wait();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println("Thread de Barbeiro: " + threadId + " Acordando...");
+                return null;
+            }
     }
 
     public synchronized static void setNumTotalClientes(int numTotalClientes) {

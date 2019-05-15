@@ -42,11 +42,8 @@ public class BarbeariaMain {
             Thread thread = new Thread(barbeiro);
             thread.start();
         }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+
         ArrayList<Cliente> clientes = new ArrayList<>();
         for (int i = 0; i < numClientes; i++) {
             Cliente clt = new Cliente(filaDeEspera);
