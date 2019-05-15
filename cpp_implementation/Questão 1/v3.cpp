@@ -6,10 +6,13 @@
 using namespace std;
 
 int dinheiro=0;
-sem_t semaforo; //Semaforo unico pois nao temos preferencia entre Leitores e Escritores, pode gerar LEITURA SUJA!
-
+int countWriter=2;
+sem_t semaforoL; //Semaforo para os leitores.
+sem_t semaforoE; //Semaforo para os escritores.
+//A prioridade das threads de leitura e escrita ficam definidas na ordem em que os semaforos sao liberados!
 void * deposito(void *i){ //Escritora
-    sem_wait(&semaforo);
+    sem_trywait(&semaforoL);
+    sem_wait(&semaforoE);
     sleep(0.1);
     int a =dinheiro;
     cout << "(THREAD ESCRITORA) Antes do deposito:" << dinheiro<< endl;
@@ -17,11 +20,14 @@ void * deposito(void *i){ //Escritora
     sleep(0.2);
     dinheiro = a;
     cout << "(THREAD ESCRITORA) Depois do deposito:" << dinheiro<< endl;
-    sem_post(&semaforo);
+    countWriter--;
+    sem_post(&semaforoE); 
+    sem_post(&semaforoL);
 }
 
 void * saque(void *i){ //Escritora
-    sem_wait(&semaforo);
+    sem_trywait(&semaforoL);
+    sem_wait(&semaforoE);
     sleep(0.1);
     int a =dinheiro;
     cout << "(THREAD ESCRITORA) Antes do saque:" << dinheiro<< endl;
@@ -29,17 +35,22 @@ void * saque(void *i){ //Escritora
     sleep(0.2);
     dinheiro = a;
     cout << "(THREAD ESCRITORA) Depois do saque:" << dinheiro<< endl;
-    sem_post(&semaforo);
+    countWriter--;
+    sem_post(&semaforoE);
+    sem_post(&semaforoL);
 }
 
 void * consulta(void *i){ //Leitora
-    sem_wait(&semaforo);
+    while(countWriter!=0){
+        sleep(0.9);
+    }
     cout << "(THREAD LEITORA) Valor na conta:"<< dinheiro << endl;
-    sem_post(&semaforo);
+    sem_post(&semaforoL);
 }
 
 int main(){
-    sem_init(&semaforo,0,1);
+    sem_init(&semaforoL,0,1);
+    sem_init(&semaforoE,0,1);
     pthread_t threads[3];
     int n;
     pthread_create(&threads[0],NULL,deposito,(void *) 0);

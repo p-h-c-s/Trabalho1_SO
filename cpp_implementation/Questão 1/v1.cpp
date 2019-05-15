@@ -1,7 +1,7 @@
 #include<iostream>
 #include<vector>
 #include"semaphore.h"
-#include"pthread.h"
+#include<pthread.h>
 #include <unistd.h>
 using namespace std;
 
@@ -11,7 +11,7 @@ sem_t semaforo;
 void * deposito(void *i){
     int a =dinheiro;
     cout << "Antes do deposito:" << dinheiro<< endl;
-    sleep(0.1);
+    sleep(0.5);
     a += 10;
     dinheiro = a;
     cout << "Depois do deposito:" << dinheiro<< endl;
@@ -40,6 +40,6 @@ int main(){
     pthread_join(threads[0],NULL);
     pthread_join(threads[1],NULL);
     pthread_join(threads[2],NULL);  
-
+    sleep(0.9);
     cout << "Valor final:" << dinheiro<< endl;
 }
