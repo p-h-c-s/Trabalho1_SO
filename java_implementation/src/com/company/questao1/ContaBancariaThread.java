@@ -1,4 +1,4 @@
-package com.company;
+package com.company.questao1;
 
 public class ContaBancariaThread implements Runnable {
 
