@@ -9,7 +9,9 @@ import java.util.Queue;
  */
 public class FilaDeEspera {
 
-    private Queue<Cliente> fila;
+    private final Queue<Cliente> fila;
+
+    private static int numTotalClientes;
 
     /**
      * Tamanho maximo da fila de espera
@@ -21,36 +23,59 @@ public class FilaDeEspera {
         this.fila = new LinkedList<>();
     }
 
-    public synchronized boolean enfileiraCliente(Cliente c){
-        if(this.fila.size() < this.maxSize){
-            this.fila.add(c);
-            notifyAll();
-            return true;
-        }else{
-            return false;
+    public synchronized boolean enfileiraCliente(Cliente c,long threadId){
+        synchronized (fila) {
+            if (this.fila.size() < this.maxSize) {
+                this.fila.add(c);
+                System.out.println("Thread Cliente: " + threadId + " enfileirando...");
+                //System.out.println("maxSize: " + this.maxSize + "size: " + this.fila.size());
+                notifyAll();
+                return true;
+            } else {
+                return false;
+            }
         }
-
     }
 
     public synchronized Cliente getNextCliente(long threadId){
         try{
             try {
-                Thread.sleep(250);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             return this.fila.remove();
         }catch (NoSuchElementException e){
+            //System.out.println("total = "  + Barbeiro.getNumTotalClientes());
+            if(FilaDeEspera.getNumTotalClientes() == 0){
+                //faz os barbeiros que estao dormindo finalizarem
+                notifyAll();
+                return null;
+            }
             System.out.println("Thread de Barbeiro: " + threadId + " Dormindo...");
             try {
                 wait();
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
+            System.out.println("Thread de Barbeiro: " + threadId + " Acordando...");
             return null;
         }
 
     }
+
+    public synchronized static void setNumTotalClientes(int numTotalClientes) {
+        FilaDeEspera.numTotalClientes = numTotalClientes;
+    }
+
+    public synchronized static int getNumTotalClientes() {
+        return numTotalClientes;
+    }
+
+    public synchronized static void decrNumTotalClientes(){
+        FilaDeEspera.numTotalClientes--;
+    }
+
 
     public int getSize(){
         return this.fila.size();

@@ -14,7 +14,7 @@ public class Barbeiro implements Runnable {
 
 
 
-    private static int numTotalClientes;
+    private long threadId;
     private static int numBarbeiros;
 
     //variavel que determina se um dado barbeiro está ocupado;
@@ -33,33 +33,34 @@ public class Barbeiro implements Runnable {
         o motivo da filaDeEspera lidar com isso e porque ela e synchronized. Caso eu quisesse lidar com o wait() na classe Barbeiro
         esse metodo iria ter que ser synchronized.
         */
-        clt = this.filaDeEspera.getNextCliente(Thread.currentThread().getId());
+        clt = this.filaDeEspera.getNextCliente(threadId);
+
+        //se um cliente foi retirado com sucesso da fila, noticiar que o tal cliente vai ser atendido
         if(clt != null){
-            clt.notifyAtendimento(Thread.currentThread().getId());
+            System.out.println("Thread Cliente: " + clt.getThreadId() + " atendida pelo barbeiro: " + threadId);
+            clt.notifyAtendimento(threadId);
         }
 
     }
 
 
-    public static void setNumTotalClientes(int numTotalClientes) {
-        Barbeiro.numTotalClientes = numTotalClientes;
-    }
 
     @Override
     public void run(){
-        System.out.println("Thread de Barbeiro: " + Thread.currentThread().getId() + " Inicializando...");
+        this.threadId = Thread.currentThread().getId();
+        System.out.println("Thread de Barbeiro: " + this.threadId + " Inicializando...");
         numBarbeiros++;
 
         /*
         enquanto todos os clientes nao forem atendidos, tentar atender. Obs: esse numero nao corresponde ao numero de clientes esperando o atendimento nas filas.
         Isso ocorre para simular uma entrada dinâmica de clientes.
         */
-        while(numTotalClientes > 0){
+        while(FilaDeEspera.getNumTotalClientes() > 0){
             atendeCliente();
         }
 
 
         numBarbeiros--;
-        System.out.println("Thread de Barbeiro: " + Thread.currentThread().getId() + " Finalizando...");
+        System.out.println("Thread de Barbeiro: " + this.threadId + " Finalizando...");
     }
 }

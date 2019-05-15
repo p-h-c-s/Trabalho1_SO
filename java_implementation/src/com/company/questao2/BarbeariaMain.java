@@ -7,7 +7,7 @@ import java.util.Scanner;
 /*
 Entrada de exemplo:
 
-2 cadeiras, 2 barbeiros e 4 clientes
+2 cadeiras, 2 barbeiros e 8 clientes
 
 2
 2
@@ -30,7 +30,7 @@ public class BarbeariaMain {
         int numBarbeiros = inp.nextInt();
         int numClientes = inp.nextInt();
         //seta o numero total de clientes
-        Barbeiro.setNumTotalClientes(numClientes);
+        FilaDeEspera.setNumTotalClientes(numClientes);
 
 
         FilaDeEspera filaDeEspera = new FilaDeEspera(tamFilaEspera);
@@ -41,6 +41,11 @@ public class BarbeariaMain {
             barbeiros.add(barbeiro);
             Thread thread = new Thread(barbeiro);
             thread.start();
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         ArrayList<Cliente> clientes = new ArrayList<>();
         for (int i = 0; i < numClientes; i++) {

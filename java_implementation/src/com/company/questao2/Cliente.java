@@ -6,6 +6,8 @@ import com.company.questao1.ContaBancariaSincronized;
 
 public class Cliente implements Runnable {
 
+
+    private long threadId;
     private FilaDeEspera filaDeEspera;
     private boolean foiAtendido = false;
 
@@ -16,26 +18,39 @@ public class Cliente implements Runnable {
 
     public synchronized void notifyAtendimento(long threadId){
         foiAtendido = true;
-        System.out.println("Thread Cliente: " + Thread.currentThread().getId() + " Sendo atendida pelo barbeiro: " + threadId);
+
+        //libera as threads que estao esperando para finalizarem
+        notifyAll();
     }
 
 
     public void enfileiraCliente(){
         //se entrar no if e porque o this nao foi enfileirado devido a fila estar cheia
-        if(!this.filaDeEspera.enfileiraCliente(this)){
-            System.out.println("Thread Cliente: " + Thread.currentThread().getId() + " Descartada por falta de espaço...");
+        if(!this.filaDeEspera.enfileiraCliente(this,threadId)){
+            System.out.println("Thread Cliente: " + this.threadId + " Descartada por falta de espaço...");
             //acorda as threads barbeiro que estiverem dormindo
         }
     }
 
     @Override
-    public void run(){
-        System.out.println("Thread Cliente: " + Thread.currentThread().getId() + " Inicializando...");
+    public synchronized void run(){
+        threadId = Thread.currentThread().getId();
+        System.out.println("Thread Cliente: " + this.threadId + " Inicializando...");
         //coloca o cliente na fila
         enfileiraCliente();
-        while(!foiAtendido){
-            //notifyAll();
+        //se nao foi atendido,
+        if(!foiAtendido){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("Thread Cliente: " + Thread.currentThread().getId() + " Finalizando...");
+        FilaDeEspera.decrNumTotalClientes();
+        System.out.println("Thread Cliente: " + this.threadId + " Finalizando...");
+    }
+
+    public long getThreadId(){
+        return threadId;
     }
 }
