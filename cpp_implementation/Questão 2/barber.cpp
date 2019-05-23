@@ -12,39 +12,36 @@ int MAX_CLIENTES=3;
 
 int num_clientes =5;
 int num_threads_clientes = num_clientes;
-int num_barbeiros=1;
+int num_barbeiros=2;
 
 int fila = 0;
 
 void *barbeiro(void *arg){
     int i =  *((int*) arg);
-    while (1){
+    while (num_clientes>0){
         cout<< "Babeiro "<<i<<" esperando cliente\n"; 
         sem_wait(&sem_clientes);
-        // sem_wait(&mutex);
+        num_clientes--;
         fila--; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
         cout<< "Babeiro "<<i<<" cortando cabelo de algum cliente.\n";
-        sleep(15);
+        sleep(5);
         cout<< "Babeiro "<<i<<" cortou cabelo.\n";
-        // sem_post(&mutex);
         sem_post(&sem_barbeiros); //Libera um barbeiro.
     }
 }
 
 void *cliente(void *arg){
     int i = *((int*)arg);
-    // sem_wait(&mutex);
     if(fila < MAX_CLIENTES){
         cout<< "Cliente "<<i<<" está na fila.\n";
         fila++; //Adiciona um cliente na fila
         sem_post(&sem_clientes); //Aumenta o valor do semaforo dos clientes
-        sem_post(&mutex);
         sem_wait(&sem_barbeiros); //Diminui o valor do semaforo dos barbeiros
         cout << "Cliente "<<i<<" cortou o cabelo.\n";
     }
     else{
         cout<<"Cliente "<<i<<" foi embora pois barbearia estava lotada.\n";
-        // sem_post(&mutex);
+        num_clientes--;
     }
 }
 
