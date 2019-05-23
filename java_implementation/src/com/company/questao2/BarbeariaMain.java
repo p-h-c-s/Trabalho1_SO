@@ -26,8 +26,11 @@ public class BarbeariaMain {
 
         Scanner inp = new Scanner(System.in);
 
+        System.out.println("Insira o tamanho da fila de espera: ");
         int tamFilaEspera = inp.nextInt();
+        System.out.println("Insira o numero de barbeiros: ");
         int numBarbeiros = inp.nextInt();
+        System.out.println("Insira o numero de clientes: ");
         int numClientes = inp.nextInt();
         //seta o numero total de clientes
         FilaDeEspera.setNumTotalClientes(numClientes);
