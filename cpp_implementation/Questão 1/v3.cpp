@@ -54,8 +54,8 @@ int main(){
     pthread_t threads[3];
     int n;
     pthread_create(&threads[0],NULL,deposito,(void *) 0);
-    pthread_create(&threads[1],NULL,saque,(void *) 0);
-    pthread_create(&threads[2],NULL,consulta,(void *) 0);
+    pthread_create(&threads[1],NULL,consulta,(void *) 0);
+    pthread_create(&threads[2],NULL,saque,(void *) 0);
 
     pthread_join(threads[0],NULL);
     pthread_join(threads[1],NULL);

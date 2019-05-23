@@ -1,6 +1,6 @@
 #include<iostream>
 #include<vector>
-#include"semaphore.h"
+#include<semaphore.h>
 #include<pthread.h>
 #include <unistd.h>
 using namespace std;
@@ -31,7 +31,7 @@ void * consulta(void *i){
 
 int main(){
     sem_init(&semaforo,0,1);
-    pthread_t threads[2];
+    pthread_t threads[3];
     int n;
     pthread_create(&threads[0],NULL,deposito,(void *) 0);
     pthread_create(&threads[1],NULL,saque,(void *) 0);
