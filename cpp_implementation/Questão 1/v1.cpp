@@ -17,7 +17,7 @@ void * adiciona(void *i){
     cout << "(ESCRITORA) Antes de adicionar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
     car.itens++;
     sleep(1);
-    car.valor -=*((int*)i);
+    car.valor +=*((int*)i);
     cout << "(ESCRITORA) Depois de adicionar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
 
