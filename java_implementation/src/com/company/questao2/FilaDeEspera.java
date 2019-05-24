@@ -24,20 +24,27 @@ public class FilaDeEspera {
     }
 
     public synchronized boolean enfileiraCliente(Cliente c,long threadId){
-            if (this.fila.size() < this.maxSize) {
+        if (this.fila.size() < this.maxSize) {
+            Barbeiro.updateAll();
+            try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 this.fila.add(c);
                 System.out.println("Thread Cliente: " + threadId + " enfileirando...");
-                //System.out.println("maxSize: " + this.maxSize + "size: " + this.fila.size());
+                //libera a fila
                 notifyAll();
                 //e preciso dar notifyAll em algum barbeiro aqui
                 /*
                 synchronized (BarbeariaMain.barbeiros.get(0)){
                     BarbeariaMain.barbeiros.get(0).notifyAll();
                 }*/
-                Barbeiro.updateAll();
+
                 return true;
             } else {
                 if(Barbeiro.numBarbeiros > 0){
+                    Barbeiro.updateAll();
                     //tranca a fila de espera que consequentemente tranca o cliente
                     try {
                         wait();
