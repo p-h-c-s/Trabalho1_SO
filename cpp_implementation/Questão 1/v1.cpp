@@ -5,53 +5,58 @@
 #include <unistd.h>
 using namespace std;
 
-int dinheiro=0;
 sem_t semaforo;
 
-void * deposito(void *i){
-    int a =dinheiro;
-    cout << "Antes do deposito:" << dinheiro<< endl;
-    sleep(0.5);
-    a += 10;
-    dinheiro = a;
-    cout << "Depois do deposito:" << dinheiro<< endl;
+struct carrinho{
+    int itens;
+    int valor;
+};
+
+carrinho car;
+void * adiciona(void *i){
+    cout << "(ESCRITORA) Antes de adicionar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
+    car.itens++;
+    sleep(1);
+    car.valor +=*((int*)i);
+    cout << "(ESCRITORA) Depois de adicionar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
 
-void * saque(void *i){
-    int a =dinheiro;
-    cout << "Antes do saque:" << dinheiro<< endl;
-    a -=5;
-    dinheiro = a;
-    cout << "Depois do saque:" << dinheiro<< endl;
+void * retira(void *i){
+    cout << "(ESCRITORA) Antes de retirar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
+    car.itens--;
+    sleep(1);
+    car.valor -=*((int*)i); 
+    cout << "(ESCRITORA) Depois de retirar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
 
 void * consulta(void *i){
-    cout << "Valor na conta:" << dinheiro<< endl;
+    cout << "(LEITIRA) Carrinho| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
 
 int main(){
-
-      int leitoras, num_deposito,num_saque;
-    cout << "Insira a quantidade de deposito, saque e leitoras: ";
-    cin >> num_deposito >> num_saque >> leitoras;
-    pthread_t threads[num_deposito+num_saque+leitoras];
-    int dep,saq;
-    cout << "Qual valor de deposito e saque: ";
-    cin >> dep >> saq;
-    for (int i = 0; i < num_deposito; i++){
-        pthread_create(&threads[i],NULL,deposito,&dep);
+    car.itens=0;
+    car.valor=0;
+    int leitoras, num_adiciona,num_retira;
+    cout << "Insira a quantidade de adiciona, retira e leitoras: ";
+    cin >> num_adiciona >> num_retira >> leitoras;
+    pthread_t threads[num_adiciona+num_retira+leitoras];
+    int add,rm;
+    cout << "Qual valor de adicionar e retirar: ";
+    cin >> add >> rm;
+    for (int i = 0; i < num_adiciona; i++){
+        pthread_create(&threads[i],NULL,adiciona,&add);
     }
 
-    for (int i = num_deposito; i < num_deposito+num_saque; i++){
-        pthread_create(&threads[i],NULL,saque,&saq);
+    for (int i = num_adiciona; i < num_adiciona+num_retira; i++){
+        pthread_create(&threads[i],NULL,retira,&rm);
     }
     
-    for (int i = num_deposito+num_saque; i < num_deposito+num_saque+leitoras; i++){
+    for (int i = num_adiciona+num_retira; i < num_adiciona+num_retira+leitoras; i++){
         pthread_create(&threads[i],NULL,consulta,(void *)0);
     }
     
-    for (int i = 0; i < num_deposito+num_saque+leitoras; i++){
+    for (int i = 0; i < num_adiciona+num_retira+leitoras; i++){
         pthread_join(threads[i],NULL);
     }
-    cout << "Valor final:" << dinheiro<< endl;
+    cout << "VALORES FINAIS| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
