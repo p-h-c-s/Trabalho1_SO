@@ -14,18 +14,24 @@ struct carrinho{
 
 carrinho car;
 void * adiciona(void *i){
+    int aux;
     cout << "(ESCRITORA) Antes de adicionar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
     car.itens++;
+    aux = car.valor;
+    aux +=*((int*)i);
     sleep(1);
-    car.valor +=*((int*)i);
+    car.valor +=aux;
     cout << "(ESCRITORA) Depois de adicionar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
 
 void * retira(void *i){
+    int aux;
     cout << "(ESCRITORA) Antes de retirar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
     car.itens--;
+    aux = car.valor;
+    aux -=*((int*)i);
     sleep(1);
-    car.valor -=*((int*)i); 
+    car.valor -=aux;
     cout << "(ESCRITORA) Depois de retirar| ITENS:" << car.itens<<" VALOR:"<< car.valor<<endl;
 }
 
