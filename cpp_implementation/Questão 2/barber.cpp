@@ -46,6 +46,9 @@ void *cliente(void *arg){
 }
 
 int main(){
+    cout <<"Informe o numero de barbeiros, cadeiras de espera e clientes: ";
+    cin >>num_barbeiros >> MAX_CLIENTES >> num_clientes;
+    num_threads_clientes = num_clientes;
     sem_init(&mutex,0,1);
     sem_init(&sem_clientes,0,0);
     sem_init(&sem_barbeiros,0,0);
