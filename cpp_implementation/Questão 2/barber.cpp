@@ -8,11 +8,15 @@ using namespace std;
 sem_t mutex;
 sem_t sem_clientes;
 sem_t sem_barbeiros;
-int MAX_CLIENTES=3;
+int MAX_CLIENTES;
 
-int num_clientes =5;
+vector<int> buffer;
+int in=0;
+int out=0;
+
+int num_clientes;
 int num_threads_clientes = num_clientes;
-int num_barbeiros=2;
+int num_barbeiros;
 
 int fila = 0;
 
@@ -22,7 +26,8 @@ void *barbeiro(void *arg){
         cout<< "Babeiro "<<i<<" esperando cliente\n"; 
         sem_wait(&sem_clientes);
         num_clientes--;
-        fila--; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
+        buffer[out]--; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
+        out = (out+1)%MAX_CLIENTES;//Garante que nao saia do vetor
         cout<< "Babeiro "<<i<<" cortando cabelo de algum cliente.\n";
         sleep(5);
         cout<< "Babeiro "<<i<<" cortou cabelo.\n";
@@ -32,9 +37,10 @@ void *barbeiro(void *arg){
 
 void *cliente(void *arg){
     int i = *((int*)arg);
-    if(fila < MAX_CLIENTES){
+    if(buffer[in]==0){
         cout<< "Cliente "<<i<<" está na fila.\n";
-        fila++; //Adiciona um cliente na fila
+        buffer[in]++; //Adiciona um cliente na fila
+        in = (in+1)%MAX_CLIENTES; //Garante que nao saia do vetor
         sem_post(&sem_clientes); //Aumenta o valor do semaforo dos clientes
         sem_wait(&sem_barbeiros); //Diminui o valor do semaforo dos barbeiros
         cout << "Cliente "<<i<<" cortou o cabelo.\n";
@@ -49,6 +55,7 @@ int main(){
     cout <<"Informe o numero de barbeiros, cadeiras de espera e clientes: ";
     cin >>num_barbeiros >> MAX_CLIENTES >> num_clientes;
     num_threads_clientes = num_clientes;
+    buffer.resize(MAX_CLIENTES);
     sem_init(&mutex,0,1);
     sem_init(&sem_clientes,0,0);
     sem_init(&sem_barbeiros,0,0);
