@@ -1,0 +1,15 @@
+
+\.vscode/
+
+cpp_implementation/Questão 1/v1
+
+cpp_implementation/Questão 1/v2
+
+cpp_implementation/Questão 1/v3
+
+cpp_implementation/Questão 2/barber
+*.class
+
+java_implementation/\.idea/
+
+*.kotlin_module

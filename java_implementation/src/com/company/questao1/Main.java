@@ -1,8 +1,11 @@
-package com.company;
+package com.company.questao1;
+
+import com.company.questao1.ContaBancariaSemControle;
+import com.company.questao1.ContaBancariaSemPreferencia;
+import com.company.questao1.ContaBancariaSincronized;
+import com.company.questao1.ContaBancariaThread;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
 
 public class Main {

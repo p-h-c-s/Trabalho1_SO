@@ -1,6 +1,6 @@
 #include<iostream>
 #include<vector>
-#include"semaphore.h"
+#include<semaphore.h>
 #include<pthread.h>
 #include <unistd.h>
 using namespace std;
@@ -30,16 +30,28 @@ void * consulta(void *i){
 }
 
 int main(){
-    sem_init(&semaforo,0,1);
-    pthread_t threads[2];
-    int n;
-    pthread_create(&threads[0],NULL,deposito,(void *) 0);
-    pthread_create(&threads[1],NULL,saque,(void *) 0);
-    pthread_create(&threads[2],NULL,saque,(void *) 0);
 
-    pthread_join(threads[0],NULL);
-    pthread_join(threads[1],NULL);
-    pthread_join(threads[2],NULL);  
-    sleep(0.9);
+      int leitoras, num_deposito,num_saque;
+    cout << "Insira a quantidade de deposito, saque e leitoras: ";
+    cin >> num_deposito >> num_saque >> leitoras;
+    pthread_t threads[num_deposito+num_saque+leitoras];
+    int dep,saq;
+    cout << "Qual valor de deposito e saque: ";
+    cin >> dep >> saq;
+    for (int i = 0; i < num_deposito; i++){
+        pthread_create(&threads[i],NULL,deposito,&dep);
+    }
+
+    for (int i = num_deposito; i < num_deposito+num_saque; i++){
+        pthread_create(&threads[i],NULL,saque,&saq);
+    }
+    
+    for (int i = num_deposito+num_saque; i < num_deposito+num_saque+leitoras; i++){
+        pthread_create(&threads[i],NULL,consulta,(void *)0);
+    }
+    
+    for (int i = 0; i < num_deposito+num_saque+leitoras; i++){
+        pthread_join(threads[i],NULL);
+    }
     cout << "Valor final:" << dinheiro<< endl;
 }
