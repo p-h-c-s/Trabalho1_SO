@@ -29,8 +29,22 @@ public class FilaDeEspera {
                 System.out.println("Thread Cliente: " + threadId + " enfileirando...");
                 //System.out.println("maxSize: " + this.maxSize + "size: " + this.fila.size());
                 notifyAll();
+                //e preciso dar notifyAll em algum barbeiro aqui
+                /*
+                synchronized (BarbeariaMain.barbeiros.get(0)){
+                    BarbeariaMain.barbeiros.get(0).notifyAll();
+                }*/
+                Barbeiro.updateAll();
                 return true;
             } else {
+                if(Barbeiro.numBarbeiros > 0){
+                    //tranca a fila de espera que consequentemente tranca o cliente
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return false;
             }
     }
@@ -48,8 +62,13 @@ public class FilaDeEspera {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                FilaDeEspera.decrNumTotalClientes();
-                return this.fila.remove();
+                Cliente clt = this.fila.remove();
+                if(clt != null){
+                    FilaDeEspera.decrNumTotalClientes();
+                    System.out.println("Thread barbeiro " + threadId + " consumindo cliente " + clt.getThreadId());
+                }
+                notifyAll();
+                return clt;
             } catch (NoSuchElementException e) {
                 //System.out.println("total = "  + Barbeiro.getNumTotalClientes());
 

@@ -11,3 +11,5 @@ cpp_implementation/Questão 2/barber
 *.class
 
 java_implementation/\.idea/
+
+*.kotlin_module

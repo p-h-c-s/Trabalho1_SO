@@ -15,7 +15,7 @@ public class Barbeiro implements Runnable {
 
 
     private long threadId;
-    private static int numBarbeiros;
+    public static int numBarbeiros;
 
     //variavel que determina se um dado barbeiro está ocupado;
     private boolean isBusy;
@@ -27,12 +27,21 @@ public class Barbeiro implements Runnable {
     }
 
 
+    public static void updateAll(){
+        for (Barbeiro b:BarbeariaMain.barbeiros) {
+            synchronized (b){
+                b.notifyAll();
+            }
+        }
+    }
+
     public void atendeCliente(){
         Cliente clt;
         /*
         o motivo da filaDeEspera lidar com isso e porque ela e synchronized. Caso eu quisesse lidar com o wait() na classe Barbeiro
         esse metodo iria ter que ser synchronized.
         */
+
         clt = this.filaDeEspera.getNextCliente(threadId);
 
         //se um cliente foi retirado com sucesso da fila, noticiar que o tal cliente vai ser atendido
@@ -49,18 +58,20 @@ public class Barbeiro implements Runnable {
     public void run(){
         this.threadId = Thread.currentThread().getId();
         System.out.println("Thread de Barbeiro: " + this.threadId + " Inicializando...");
-        numBarbeiros++;
+
 
         /*
         enquanto todos os clientes nao forem atendidos, tentar atender. Obs: esse numero nao corresponde ao numero de clientes esperando o atendimento nas filas.
         Isso ocorre para simular uma entrada dinâmica de clientes.
         */
         while(FilaDeEspera.getNumTotalClientes() > 0){
+            Barbeiro.numBarbeiros--;
             atendeCliente();
+            Barbeiro.numBarbeiros++;
         }
 
 
-        numBarbeiros--;
+
         System.out.println("Thread de Barbeiro: " + this.threadId + " Finalizando...");
     }
 }

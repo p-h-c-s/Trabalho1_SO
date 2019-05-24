@@ -62,10 +62,12 @@ public class Cliente implements Runnable {
     }
 
 
+    //aqui e preciso avisar um barbeiro para ele consumir
     public void enfileiraCliente(){
         //se entrar no if e porque o this nao foi enfileirado devido a fila estar cheia
         if(!this.filaDeEspera.enfileiraCliente(this,threadId)){
             System.out.println("Thread Cliente: " + this.threadId + " Descartada por falta de espaço...");
+            FilaDeEspera.decrNumTotalClientes();
             foiAtendido = true;
             //acorda as threads barbeiro que estiverem dormindo
         }

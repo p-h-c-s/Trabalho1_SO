@@ -21,6 +21,10 @@ Sem isso alguma outra estrategia precisaria ser usada (até o usuario dar uma in
 
 public class BarbeariaMain {
 
+    static ArrayList<Barbeiro> barbeiros = new ArrayList<>();
+
+    static ArrayList<Cliente> clientes = new ArrayList<>();
+
     public static void main(String[] args) {
 
 
@@ -38,7 +42,7 @@ public class BarbeariaMain {
 
         FilaDeEspera filaDeEspera = new FilaDeEspera(tamFilaEspera);
 
-        ArrayList<Barbeiro> barbeiros = new ArrayList<>();
+        Barbeiro.numBarbeiros = numBarbeiros;
         for (int i = 0; i < numBarbeiros; i++) {
             Barbeiro barbeiro = new Barbeiro(filaDeEspera);
             barbeiros.add(barbeiro);
@@ -47,7 +51,7 @@ public class BarbeariaMain {
         }
 
 
-        ArrayList<Cliente> clientes = new ArrayList<>();
+
         for (int i = 0; i < numClientes; i++) {
             Cliente clt = new Cliente(filaDeEspera);
             clientes.add(clt);
