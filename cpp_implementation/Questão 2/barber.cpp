@@ -27,7 +27,7 @@ void *barbeiro(void *arg){
         sem_wait(&sem_clientes);
         num_clientes--;
         buffer[out]--; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
-        out++;//Garante que nao saia do vetor
+        out = (out+1)%MAX_CLIENTES;//Garante que nao saia do vetor
         cout<< "Babeiro "<<i<<" cortando cabelo de algum cliente.\n";
         sleep(5);
         cout<< "Babeiro "<<i<<" cortou cabelo.\n";
