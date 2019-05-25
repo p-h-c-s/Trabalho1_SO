@@ -27,7 +27,7 @@ void *barbeiro(void *arg){
         sem_wait(&sem_clientes);
         num_clientes--;
         buffer[out]--; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
-        out = in;//Garante que nao saia do vetor
+        out++;//Garante que nao saia do vetor
         cout<< "Babeiro "<<i<<" cortando cabelo de algum cliente.\n";
         sleep(5);
         cout<< "Babeiro "<<i<<" cortou cabelo.\n";
@@ -61,10 +61,10 @@ int main(){
     sem_init(&sem_barbeiros,0,0);
     int n;
     pthread_t threads[num_barbeiros+num_clientes];
-
+    cout << endl;
     for (int i = 0; i < num_barbeiros; i++){
         pthread_create(&threads[i],NULL,barbeiro,&i);
-        sleep(0.01); //Tempo infimo apenas para dar tempo de atualizar o i.
+        sleep(0.00001); //Tempo infimo apenas para dar tempo de atualizar o i.
         
     }
 
@@ -72,10 +72,10 @@ int main(){
     for (int i = num_barbeiros; i < num_barbeiros+num_threads_clientes; i++){
         copia = i-num_barbeiros;
         pthread_create(&threads[i],NULL,cliente,&copia);
-        sleep(1);
+        sleep(0.00001);
     }
     
-    for (int i = 0; i < num_barbeiros+num_barbeiros; i++){
+    for (int i = 0; i < num_barbeiros+num_threads_clientes; i++){
         pthread_join(threads[i],NULL);
     }
     return 0;
