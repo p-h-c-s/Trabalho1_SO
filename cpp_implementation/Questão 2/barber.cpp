@@ -61,23 +61,21 @@ int main(){
     sem_init(&sem_barbeiros,0,0);
     int n;
     pthread_t threads[num_barbeiros+num_clientes];
-
+    cout << endl;
     for (int i = 0; i < num_barbeiros; i++){
         pthread_create(&threads[i],NULL,barbeiro,&i);
-        sleep(0.01); //Tempo infimo apenas para dar tempo de atualizar o i.
+        sleep(0.00001); //Tempo infimo apenas para dar tempo de atualizar o i.
         
     }
-
-    sleep(3);
 
     int copia;
     for (int i = num_barbeiros; i < num_barbeiros+num_threads_clientes; i++){
         copia = i-num_barbeiros;
         pthread_create(&threads[i],NULL,cliente,&copia);
-        sleep(1);
+        sleep(0.00001);
     }
     
-    for (int i = 0; i < num_barbeiros+num_barbeiros; i++){
+    for (int i = 0; i < num_barbeiros+num_threads_clientes; i++){
         pthread_join(threads[i],NULL);
     }
     return 0;
