@@ -26,9 +26,9 @@ void *barbeiro(void *arg){
         cout<< "Babeiro "<<i<<" esperando cliente\n"; 
         sem_wait(&sem_clientes);
         num_clientes--;
-        buffer[out]--; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
+        cout<< "Babeiro "<<i<<" cortando cabelo do cliente "<<buffer[out]<<endl;
+        buffer[out]=0; //Retira um cliente da fila. Necessario estar dentro de uma area critica pois se nao podemos ter escrita suja
         out = (out+1)%MAX_CLIENTES;//Garante que nao saia do vetor
-        cout<< "Babeiro "<<i<<" cortando cabelo de algum cliente.\n";
         sleep(5);
         cout<< "Babeiro "<<i<<" cortou cabelo.\n";
         sem_post(&sem_barbeiros); //Libera um barbeiro.
@@ -39,7 +39,7 @@ void *cliente(void *arg){
     int i = *((int*)arg);
     if(buffer[in]==0){
         cout<< "Cliente "<<i<<" está na fila.\n";
-        buffer[in]++; //Adiciona um cliente na fila
+        buffer[in]=i; //Adiciona um cliente na fila
         in = (in+1)%MAX_CLIENTES; //Garante que nao saia do vetor
         sem_post(&sem_clientes); //Aumenta o valor do semaforo dos clientes
         sem_wait(&sem_barbeiros); //Diminui o valor do semaforo dos barbeiros
@@ -70,7 +70,7 @@ int main(){
 
     int copia;
     for (int i = num_barbeiros; i < num_barbeiros+num_threads_clientes; i++){
-        copia = i-num_barbeiros;
+        copia = i-num_barbeiros+1;
         pthread_create(&threads[i],NULL,cliente,&copia);
         sleep(0.00001);
     }
