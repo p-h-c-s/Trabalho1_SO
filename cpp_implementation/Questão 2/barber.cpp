@@ -64,7 +64,7 @@ int main(){
     cout << endl;
     for (int i = 0; i < num_barbeiros; i++){
         pthread_create(&threads[i],NULL,barbeiro,&i);
-        sleep(0.00001); //Tempo infimo apenas para dar tempo de atualizar o i.
+        sleep(0.1); //Tempo infimo apenas para dar tempo de atualizar o i.
         
     }
 
@@ -72,7 +72,7 @@ int main(){
     for (int i = num_barbeiros; i < num_barbeiros+num_threads_clientes; i++){
         copia = i-num_barbeiros+1;
         pthread_create(&threads[i],NULL,cliente,&copia);
-        sleep(0.00001);
+        sleep(0.1);
     }
     
     for (int i = 0; i < num_barbeiros+num_threads_clientes; i++){
